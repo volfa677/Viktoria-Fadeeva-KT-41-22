@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ViktoriaFadeevaKT_41_22.Models;
 using ViktoriaFadeevaKT_41_22.Database.Configurations;
+using ViktoriaFadeevaKT_41_22.Data.Configurations;
 
 namespace ViktoriaFadeevaKT_41_22.Database
 {
@@ -8,7 +9,7 @@ namespace ViktoriaFadeevaKT_41_22.Database
     {
         public DbSet<Department> Departments { get; set; }
         public DbSet<Teacher> Teachers { get; set; }
-        public DbSet<AcademicDegree> AcademicDegrees { get; set; }
+        public DbSet<Degree> Degrees { get; set; }
         public DbSet<Position> Positions { get; set; }
         public DbSet<Discipline> Disciplines { get; set; }
         public DbSet<Load> Loads { get; set; }
@@ -17,7 +18,7 @@ namespace ViktoriaFadeevaKT_41_22.Database
         {
             modelBuilder.ApplyConfiguration(new DepartmentConfiguration());
             modelBuilder.ApplyConfiguration(new TeacherConfiguration());
-            modelBuilder.ApplyConfiguration(new AcademicDegreeConfiguration());
+            modelBuilder.ApplyConfiguration(new DegreeConfiguration());
             modelBuilder.ApplyConfiguration(new PositionConfiguration());
             modelBuilder.ApplyConfiguration(new DisciplineConfiguration());
             modelBuilder.ApplyConfiguration(new LoadConfiguration());

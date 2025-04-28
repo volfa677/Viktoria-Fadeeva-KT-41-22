@@ -2,7 +2,7 @@
 
 namespace ViktoriaFadeevaKT_41_22.Models
 {
-    public class Position
+    public class Degree
     {
         [Key]
         public int Id { get; set; }

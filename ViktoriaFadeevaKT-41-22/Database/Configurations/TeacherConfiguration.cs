@@ -1,36 +1,30 @@
-﻿using ViktoriaFadeevaKT_41_22.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using ViktoriaFadeevaKT_41_22.Models;
 
-namespace ViktoriaFadeevaKT_41_22.Database.Configurations
+namespace ViktoriaFadeevaKT_41_22.Data.Configurations
 {
     public class TeacherConfiguration : IEntityTypeConfiguration<Teacher>
     {
+        private const string TableName = "Teachers";
         public void Configure(EntityTypeBuilder<Teacher> builder)
         {
-            builder.ToTable("Teachers");
             builder.HasKey(t => t.Id);
 
-            builder.Property(t => t.FirstName).HasMaxLength(50).IsRequired();
-            builder.Property(t => t.LastName).HasMaxLength(50).IsRequired();
+            builder.Property(t => t.FirstName)
+                .IsRequired();
 
-            builder.HasOne(t => t.AcademicDegree)
-                .WithMany(d => d.Teachers)
-                .HasForeignKey(t => t.AcademicDegreeId)
-                .OnDelete(DeleteBehavior.Restrict)
-                .IsRequired(false);
+            builder.Property(t => t.LastName)
+                .IsRequired();
 
-            builder.HasOne(t => t.Position)
-                .WithMany(p => p.Teachers)
-                .HasForeignKey(t => t.PositionId)
-                .OnDelete(DeleteBehavior.Restrict)
-                .IsRequired(false);
+            builder.HasMany(t => t.Loads)
+                .WithOne(l => l.Teacher)
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(t => t.Department)
                 .WithMany(d => d.Teachers)
                 .HasForeignKey(t => t.DepartmentId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
-
     }
 }

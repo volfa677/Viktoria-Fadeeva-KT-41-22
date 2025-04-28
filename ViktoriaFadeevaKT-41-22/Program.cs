@@ -2,6 +2,7 @@ using ViktoriaFadeevaKT_41_22.Database;
 using Microsoft.EntityFrameworkCore;
 using NLog;
 using NLog.Web;
+using ViktoriaFadeevaKT_41_22.ServiceExtensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,8 @@ try
 
     builder.Services.AddDbContext<TeacherDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+    builder.Services.AddServices();
 
     var app = builder.Build();
     // Configure the HTTP request pipeline.
