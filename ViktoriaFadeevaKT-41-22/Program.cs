@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using NLog;
 using NLog.Web;
 using ViktoriaFadeevaKT_41_22.ServiceExtensions;
+using ViktoriaFadeevaKT_41_22.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +32,9 @@ try
         app.UseSwagger();
         app.UseSwaggerUI();
     }
+
+    app.UseMiddleware<ExceptionHandlerMiddleware>();
+
     app.UseAuthorization();
 
     app.MapControllers();
