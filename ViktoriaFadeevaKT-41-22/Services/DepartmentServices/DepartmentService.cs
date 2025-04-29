@@ -99,30 +99,51 @@ namespace ViktoriaFadeevaKT_41_22.Services.DepartmentServices
             return true;
         }
 
-
-
-
-        public async Task<List<string>> Zashita1(
-        string disciplineName,
-        int? minHours = null,
-        int? maxHours = null)
+        public async Task<Dictionary<string, List<string>>> GetDepartmentDegreesWithTeachers(string departmentName)
         {
-            if (string.IsNullOrEmpty(disciplineName))
+            if (string.IsNullOrEmpty(departmentName))
             {
-                throw new ArgumentException("Имя дисциплины обязательно для заполнения.", nameof(disciplineName));
+                throw new ArgumentException("Название кафедры обязательно для заполнения.", nameof(departmentName));
             }
 
-            return await (from department in _dbcontext.Departments
-                          join teacher in _dbcontext.Teachers on department.Id equals teacher.DepartmentId
-                          join load in _dbcontext.Loads on teacher.Id equals load.TeacherId
-                          join discipline in _dbcontext.Disciplines on load.DisciplineId equals discipline.Id
-                          where discipline.Name.Contains(disciplineName) &&
-                                (!minHours.HasValue || load.Hours >= minHours.Value) &&
-                                (!maxHours.HasValue || load.Hours <= maxHours.Value)
-                          select department.Name)
-                          .Distinct()
-                          .ToListAsync();
+            var result = await (from department in _dbcontext.Departments
+                                join teacher in _dbcontext.Teachers on department.Id equals teacher.DepartmentId
+                                join degree in _dbcontext.Degrees on teacher.DegreeId equals degree.Id
+                                where department.Name == departmentName
+                                group new { teacher.LastName, teacher.FirstName } by degree.Name into g
+                                select new
+                                {
+                                    DegreeName = g.Key,
+                                    Teachers = g.Select(t => $"{t.LastName} {t.FirstName} ").ToList()
+                                })
+                               .ToDictionaryAsync(x => x.DegreeName, x => x.Teachers);
+
+            return result;
         }
+
+
+
+             public async Task<List<string>> Zashita1(
+           string disciplineName,
+         int? minHours = null,
+          int? maxHours = null)
+          {
+            if (string.IsNullOrEmpty(disciplineName))
+          {
+            throw new ArgumentException("Имя дисциплины обязательно для заполнения.", nameof(disciplineName));
+         }
+
+          return await (from department in _dbcontext.Departments
+                      join teacher in _dbcontext.Teachers on department.Id equals teacher.DepartmentId
+                    join load in _dbcontext.Loads on teacher.Id equals load.TeacherId
+                  join discipline in _dbcontext.Disciplines on load.DisciplineId equals discipline.Id
+                where discipline.Name.Contains(disciplineName) &&
+                    (!minHours.HasValue || load.Hours >= minHours.Value) &&
+                  (!maxHours.HasValue || load.Hours <= maxHours.Value)
+              select department.Name)
+                .Distinct()
+              .ToListAsync();
+         }
 
 
 

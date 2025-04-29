@@ -87,20 +87,37 @@ namespace ViktoriaFadeevaKT_41_22.Controllers
             return NoContent();
         }
 
-
-
-
-
-        [HttpGet("zashita1")]
-        public async Task<IActionResult> Zashita1(
-         [FromQuery] string disciplineName,
-         [FromQuery] int? minHours = null,
-         [FromQuery] int? maxHours = null)
+        [HttpGet("department-degrees")]
+        public async Task<IActionResult> GetDepartmentDegrees([FromQuery] string departmentName)
         {
-
-            var departments = await _departmentService.Zashita1(disciplineName, minHours, maxHours);
-            return Ok(departments);
+            try
+            {
+                var degreesWithTeachers = await _departmentService.GetDepartmentDegreesWithTeachers(departmentName);
+                return Ok(degreesWithTeachers);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+               
+                return StatusCode(500, "Внутренняя ошибка сервера");
+            }
         }
+
+
+
+              [HttpGet("zashita1")]
+              public async Task<IActionResult> Zashita1(
+              [FromQuery] string? disciplineName =null,
+              [FromQuery] int? minHours = null,
+              [FromQuery] int? maxHours = null)
+             {
+
+                 var departments = await _departmentService.Zashita1(disciplineName, minHours, maxHours);
+                return Ok(departments);
+            }
 
     }
 }

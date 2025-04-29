@@ -22,7 +22,24 @@ namespace ViktoriaFadeevaKT_41_22.Controllers
             var loads = await _loadService.GetLoadsAsync(teacherFirstName, teacherLastName, departmentName, disciplineName);
             return Ok(loads);
         }
-
+        [HttpGet("teachers-by-discipline")]
+        public async Task<IActionResult> GetTeachersByDiscipline([FromQuery] string disciplineName)
+        {
+            try
+            {
+                var teachers = await _loadService.GetTeachersByDisciplineAsync(disciplineName);
+                return Ok(teachers);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+               
+                return StatusCode(500, "Внутренняя ошибка сервера");
+            }
+        }
         [HttpPost]
         public async Task<IActionResult> AddLoad([FromBody] LoadDto loadDto)
         {

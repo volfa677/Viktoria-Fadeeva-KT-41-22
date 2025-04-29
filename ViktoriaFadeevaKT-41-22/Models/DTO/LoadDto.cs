@@ -6,4 +6,9 @@
         public int TeacherId { get; set; }
         public int Hours { get; set; }
     }
+    public class TeacherNameDto
+    {
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+    }
 }

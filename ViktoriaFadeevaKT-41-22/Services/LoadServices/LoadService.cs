@@ -58,7 +58,27 @@ namespace ViktoriaFadeevaKT_41_22.Services.LoadServices
             return loads;
         }
 
+        public async Task<List<TeacherNameDto>> GetTeachersByDisciplineAsync(string disciplineName)
+        {
+            if (string.IsNullOrEmpty(disciplineName))
+            {
+                throw new ArgumentException("Название дисциплины обязательно для заполнения.", nameof(disciplineName));
+            }
 
+            var teachers = await _dbcontext.Loads
+                .Include(l => l.Teacher)
+                .Include(l => l.Discipline)
+                .Where(l => l.Discipline.Name.Contains(disciplineName))
+                .Select(l => new TeacherNameDto
+                {
+                    FirstName = l.Teacher.FirstName,
+                    LastName = l.Teacher.LastName
+                })
+                .Distinct()  // Убираем дубликаты, если преподаватель ведет дисциплину несколько раз
+                .ToListAsync();
+
+            return teachers;
+        }
         public async Task<LoadFilter> AddLoadAsync(int teacherId, int disciplineId, int hours)
         {
             var load = new Load
